@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Project Features API
+  version: 1.0.0
+  description: RESTful API for managing project features
+servers:
+  - url: https://api.example.com/v1
+
+paths:
+  /projects/{projectId}/features:
+    get:
+      summary: Get project features
+      description: Retrieve a list of features for a specific project
+      parameters:
+        - in: path
+          name: projectId
+          description: ID of the project
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          description: Page number for pagination (default: 1)
+          schema:
+            type: integer
+            minimum: 1
+          example: 1
+        - in: query
+          name: limit
+          description: Number of features per page (default: 10)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          example: 10
+        - in: query
+          name: sort
+          description: Sort order for features (default: name)
+          schema:
+            type: string
+            enum: [name, created_at, updated_at]
+          example: name
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feature'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new project feature
+      description: Create a new feature for a specific project
+      parameters:
+        - in: path
+          name: projectId
+          description: ID of the project
+          required: true
+          schema:
+            type: integer
+        - in: requestBody
+          name: body
+          description: Feature data
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewFeature'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feature'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /projects/{projectId}/features/{featureId}:
+    get:
+      summary: Get a project feature
+      description: Retrieve details of a specific feature for a specific project
+      parameters:
+        - in: path
+          name: projectId
+          description: ID of the project
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: featureId
+          description: ID of the feature
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feature'
+        '404':
+          description: Feature not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a project feature
+      description: Update details of a specific feature for a specific project
+      parameters:
+        - in: path
+          name: projectId
+          description: ID of the project
+          required: true
+          schema:
+            type: integer
+       
